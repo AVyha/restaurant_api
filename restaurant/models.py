@@ -7,6 +7,9 @@ from restaurant.validator import validate_score
 class Restaurant(models.Model):
     name = models.CharField(max_length=20)
 
+    def __str__(self):
+        return self.name
+
 
 class Menu(models.Model):
     date = models.DateField(auto_now_add=True)
@@ -17,6 +20,9 @@ class Menu(models.Model):
     score = models.ManyToManyField(
         "Employee", through="EmployeeScore", related_name="employee_score"
     )
+
+    def __str__(self):
+        return f"{self.restaurant} - {self.date}"
 
 
 class Employee(AbstractUser):
@@ -36,16 +42,24 @@ class Employee(AbstractUser):
         (BARTENDER, "Bartender"),
     )
 
-    position = models.CharField(max_length=2, choices=POSITION_CHOICES)
+    position = models.CharField(max_length=2, choices=POSITION_CHOICES, default="CK")
 
     score = models.ManyToManyField(
         "Menu", through="EmployeeScore", related_name="menu_score"
     )
+    restaurant = models.ForeignKey(
+        "Restaurant", on_delete=models.CASCADE, related_name="restaurant_employee"
+    )
+
+    def __str__(self):
+        return self.username
 
 
 class EmployeeScore(models.Model):
     employee = models.ForeignKey("Employee", on_delete=models.CASCADE)
-    menu = models.ForeignKey("Menu", on_delete=models.CASCADE)
+    menu = models.ForeignKey(
+        "Menu", on_delete=models.CASCADE, related_name="employee_score"
+    )
     points = models.IntegerField(validators=[validate_score])
 
     class Meta:
@@ -59,3 +73,9 @@ class Position(models.Model):
     menu = models.ForeignKey(
         "Menu", on_delete=models.CASCADE, related_name="menu_position"
     )
+    restaurant = models.ForeignKey(
+        "Restaurant", on_delete=models.CASCADE, related_name="restaurant_position"
+    )
+
+    def __str__(self):
+        return f"{self.name} - {self.price}"
