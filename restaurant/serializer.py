@@ -35,7 +35,7 @@ class MenuSerializer(serializers.ModelSerializer):
     def get_average_score(self, obj):
         scores = obj.employee_score.values_list("points", flat=True)
         if scores:
-            return sum(scores) / len(scores)
+            return round(sum(scores) / len(scores), 2)
         else:
             return None
 
