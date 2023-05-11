@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from restaurant.validator import validate_score
+from restaurant.validator import validate_score, validate_price
 
 
 class Restaurant(models.Model):
@@ -68,7 +68,7 @@ class EmployeeScore(models.Model):
 
 class Position(models.Model):
     name = models.CharField(max_length=20)
-    price = models.IntegerField()
+    price = models.IntegerField(validators=[validate_price])
 
     menu = models.ForeignKey(
         "Menu", on_delete=models.CASCADE, related_name="menu_position"
