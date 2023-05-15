@@ -14,6 +14,13 @@ create `.env` file and fill with yours variable like in example `.env-sample`
 python manage.py runserver
 ```
 
+## Run with docker
+
+```
+docker-compose build
+docker-compose up -d
+```
+
 ## Endpoints
 1. Restaurants `localhost:8000/api/restaurants/`
 
